@@ -1,7 +1,8 @@
 import 'package:chore/src/ui/tasklist_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
+import 'package:format/format.dart';
+import 'dart:ui';
 import '../data/models/task.dart';
 
 class TaskListPage extends StatelessWidget {
@@ -16,12 +17,28 @@ class TaskListPage extends StatelessWidget {
             itemCount: tasks.length,
             itemBuilder: (context, index) {
               final task = tasks[index];
+              final color = _colorForTask(task);
 
-              return ListTile(
-                title: Text(task.title),
-                onTap: () {
-                  context.read<TaskListCubit>().markDone(task.id);
-                },
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                child: Material(
+                  elevation: 1,
+                  borderRadius: BorderRadius.circular(12),
+                  color: Theme.of(context).colorScheme.surface,
+                  child: ListTile(
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    leading: CircleAvatar(
+                      backgroundColor: color,
+                      radius: 6,
+                    ),
+                    title: Text(task.title),
+                    onTap: () {
+                      // context.read<TaskListCubit>().markDone(task.id);
+                      _showConfirmDialog(context, task);
+
+                    }
+                  ),
+                ),
               );
             },
           );
@@ -29,4 +46,61 @@ class TaskListPage extends StatelessWidget {
       ),
     );
   }
+}
+
+
+Color _colorForTask(Task task) {
+  if (task.lastDoneAt == null) return Colors.grey;
+  final hours = DateTime.now().difference(task.lastDoneAt!).inHours;
+  if (hours < 24) return Colors.green;
+  if (hours < 48) return Colors.orange;
+  return Colors.red;
+}
+
+
+Future<void> _showConfirmDialog(BuildContext context, Task task) async {
+  await showDialog(
+    context: context,
+    builder: (dialogContext) {
+      return AlertDialog(
+        content: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            _circleButton(
+              icon: Icons.close,
+              color: Colors.red,
+              onPressed: () {
+                Navigator.of(dialogContext).pop();
+              },
+            ),
+            _circleButton(
+              icon: Icons.check,
+              color: Colors.green,
+              onPressed: () {
+                context.read<TaskListCubit>().markDone(task.id);
+                Navigator.of(dialogContext).pop();
+              },
+            ),
+          ],
+        ),
+      );
+    },
+  );
+}
+
+Widget _circleButton({
+  required IconData icon,
+  required Color color,
+  required VoidCallback onPressed,
+}) {
+  return Ink(
+    decoration: ShapeDecoration(
+      color: color.withOpacity(0.15),
+      shape: const CircleBorder(),
+    ),
+    child: IconButton(
+      icon: Icon(icon, color: color),
+      onPressed: onPressed,
+    ),
+  );
 }
