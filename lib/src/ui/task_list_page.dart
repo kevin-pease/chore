@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:format/format.dart';
 import 'dart:ui';
-import '../data/models/task.dart'; // TODO: is this wise?
+import '../data/models/task.dart';
+import 'add_task_page.dart'; // TODO: is this wise?
 
 class TaskListPage extends StatelessWidget {
   const TaskListPage({super.key});
@@ -56,7 +57,11 @@ class TaskListPage extends StatelessWidget {
               const SizedBox(width: 16),
               FloatingActionButton(
                 onPressed: () {
-                  // TODO: action
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => AddTaskPage(),
+                  )
+                  );
                 },
                 child: const Icon(Icons.add),
               ),

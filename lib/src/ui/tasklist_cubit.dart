@@ -31,6 +31,6 @@ class TaskListCubit extends Cubit<List<Task>> {
   }
 
   void addTask(Task task) {
-    print(state);
+    emit([...state, task]);
   }
 }
