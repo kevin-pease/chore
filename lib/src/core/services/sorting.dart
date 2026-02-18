@@ -1,4 +1,4 @@
-import '../data/models/task.dart';
+import '../../data/models/task.dart';
 
 int sortTasksByRecency(Task a, Task b) {
   if (a.lastDoneAt == null && b.lastDoneAt == null) return 0;
