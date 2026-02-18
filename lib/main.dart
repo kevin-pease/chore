@@ -5,7 +5,6 @@ import 'package:flutter_ioc_get_it/flutter_ioc_get_it.dart';
 
 import 'core.dart' as core;
 // import 'data.dart' as data;
-// import 'ui.dart' as ui;
 
 void main() async {
   GetItIocContainer.register();

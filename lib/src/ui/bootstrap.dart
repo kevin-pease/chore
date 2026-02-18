@@ -12,7 +12,6 @@ Future<void> bootstrap() async {
     App(
       globalBlocProviders: [
         BlocProvider<TaskListCubit>(
-          // TODO: Verder gaan met ChatGpt prompt, stap 5 ongeveer
           create: (_) => TaskListCubit()..loadInitialTasks(),
         ),
       ],

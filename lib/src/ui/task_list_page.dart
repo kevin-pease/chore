@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:format/format.dart';
 import 'dart:ui';
-import '../data/models/task.dart';
+import '../data/models/task.dart'; // TODO: is this wise?
 
 class TaskListPage extends StatelessWidget {
   const TaskListPage({super.key});
@@ -33,9 +33,7 @@ class TaskListPage extends StatelessWidget {
                     ),
                     title: Text(task.title),
                     onTap: () {
-                      // context.read<TaskListCubit>().markDone(task.id);
-                      _showConfirmDialog(context, task);
-
+                      context.read<TaskListCubit>().markDone(task.id);
                     }
                   ),
                 ),
@@ -48,59 +46,10 @@ class TaskListPage extends StatelessWidget {
   }
 }
 
-
 Color _colorForTask(Task task) {
   if (task.lastDoneAt == null) return Colors.grey;
   final hours = DateTime.now().difference(task.lastDoneAt!).inHours;
   if (hours < 24) return Colors.green;
   if (hours < 48) return Colors.orange;
   return Colors.red;
-}
-
-
-Future<void> _showConfirmDialog(BuildContext context, Task task) async {
-  await showDialog(
-    context: context,
-    builder: (dialogContext) {
-      return AlertDialog(
-        content: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            _circleButton(
-              icon: Icons.close,
-              color: Colors.red,
-              onPressed: () {
-                Navigator.of(dialogContext).pop();
-              },
-            ),
-            _circleButton(
-              icon: Icons.check,
-              color: Colors.green,
-              onPressed: () {
-                context.read<TaskListCubit>().markDone(task.id);
-                Navigator.of(dialogContext).pop();
-              },
-            ),
-          ],
-        ),
-      );
-    },
-  );
-}
-
-Widget _circleButton({
-  required IconData icon,
-  required Color color,
-  required VoidCallback onPressed,
-}) {
-  return Ink(
-    decoration: ShapeDecoration(
-      color: color.withOpacity(0.15),
-      shape: const CircleBorder(),
-    ),
-    child: IconButton(
-      icon: Icon(icon, color: color),
-      onPressed: onPressed,
-    ),
-  );
 }
