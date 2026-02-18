@@ -2,6 +2,7 @@ import 'package:chore/src/ui/tasklist_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:format/format.dart';
+import 'package:intl/intl.dart';
 import 'dart:ui';
 import '../data/models/task.dart';
 import 'add_task_page.dart'; // TODO: is this wise?
@@ -13,7 +14,6 @@ class TaskListPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('AppBar')),
-
       body: Column(
         children: [
           Expanded(
@@ -25,7 +25,11 @@ class TaskListPage extends StatelessWidget {
                 itemBuilder: (context, index) {
                   final task = tasks[index];
                   final color = _colorForTask(task);
-
+                  final formatter = DateFormat('dd-MM-yyyy HH:mm');
+                  final lastDoneFormatted = task.lastDoneAt != null
+                      ? formatter.format(task.lastDoneAt!.toLocal())
+                      : 'nog nooit';
+                  final timeUnitsAgo = _getTimeUnitsAgo(task.lastDoneAt);
                   // TODO: magic numbers?
                   return Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -34,10 +38,6 @@ class TaskListPage extends StatelessWidget {
                       borderRadius: BorderRadius.circular(12),
                       color: Theme.of(context).colorScheme.surface,
                       child: InkWell(
-                        child: GestureDetector(
-                        onLongPressStart: (details) {
-                          _showMenu(context, details.globalPosition, task);
-                        },
                         child:
                         ListTile(
                           contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -45,14 +45,35 @@ class TaskListPage extends StatelessWidget {
                             backgroundColor: color,
                             radius: 10,
                           ),
-                          title: Text(format('{} {}', task.title, _formatFrequency(task.frequency))),
-                          onTap: () {
+                          title: Row(
+                            children: [
+                              Text(
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                  task.title),
+                              Text(_formatFrequency(task.frequency)),
+                            ],
+                          ),
+                          onLongPress: () {
                             context.read<TaskListCubit>().markDone(task.id);
+                            // TODO create bar in bottom and ask for confirmation
                           },
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => AddTaskPage(existingTask: task),
+                                )
+                            );
+                          },
+                          trailing: Column(
+                            children: [
+                              Text('Laatst gedaan:'),
+                              Text(lastDoneFormatted),
+                              Text(timeUnitsAgo),
+                          ]
+                          ),
                         ),
                       ),
                       ),
-                    ),
                     );
                 },
               );
@@ -110,7 +131,9 @@ Future<void> _showMenu(
     ) async {
   final selected = await showMenu<TaskAction>(
     context: context,
-    position: RelativeRect.fromLTRB(
+    menuPadding:  const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+
+      position: RelativeRect.fromLTRB(
       position.dx,
       position.dy,
       position.dx,
@@ -156,4 +179,19 @@ void _handleAction(
       context.read<TaskListCubit>().deleteTask(task);
       break;
   }
+}
+
+String _getTimeUnitsAgo(DateTime? date) {
+  if (date == null) return '';
+
+  final now = DateTime.now();
+  final difference = now.difference(date);
+
+  if (difference.inSeconds < 60) return 'zojuist';
+  if (difference.inMinutes < 60) return '${difference.inMinutes}m geleden';
+  if (difference.inHours < 24) return '${difference.inHours}u geleden';
+  if (difference.inDays < 7) return '${difference.inDays} dagen geleden';
+  if (difference.inDays < 30) return '${(difference.inDays / 7).floor()} weken geleden';
+  if (difference.inDays < 365) return '${(difference.inDays / 30).floor()} maanden geleden';
+  return '${(difference.inDays / 365).floor()} jaar geleden';
 }
