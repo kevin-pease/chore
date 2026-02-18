@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:format/format.dart';
 import '../core/services/sorting.dart';
 import '../data/models/task.dart';
 
@@ -32,5 +33,28 @@ class TaskListCubit extends Cubit<List<Task>> {
 
   void addTask(Task task) {
     emit([...state, task]);
+  }
+
+  void editTask(Task updatedTask) {
+    print(updatedTask.title);
+    final updated = state.map((task) {
+      if (task.id == updatedTask.id) {
+        print(format("{} == {}", task.id, updatedTask.id));
+        return Task(
+          id: updatedTask.id,
+          title: updatedTask.title,
+          lastDoneAt: updatedTask.lastDoneAt,
+          frequency: updatedTask.frequency,
+        );
+      }
+      return task;
+    }).toList();
+    emit(updated);
+  }
+
+  void deleteTask(Task task) {
+    final updatedList = List<Task>.from(state)
+      ..remove(task);
+    emit(updatedList);
   }
 }

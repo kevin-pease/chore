@@ -33,19 +33,27 @@ class TaskListPage extends StatelessWidget {
                       elevation: 1,
                       borderRadius: BorderRadius.circular(12),
                       color: Theme.of(context).colorScheme.surface,
-                      child: ListTile(
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                        leading: CircleAvatar(
-                          backgroundColor: color,
-                          radius: 10,
+                      child: InkWell(
+                        child: GestureDetector(
+                        onLongPressStart: (details) {
+                          _showMenu(context, details.globalPosition, task);
+                        },
+                        child:
+                        ListTile(
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                          leading: CircleAvatar(
+                            backgroundColor: color,
+                            radius: 10,
+                          ),
+                          title: Text(format('{} {}', task.title, _formatFrequency(task.frequency))),
+                          onTap: () {
+                            context.read<TaskListCubit>().markDone(task.id);
+                          },
                         ),
-                        title: Text(format('{} {}', task.title, _formatFrequency(task.frequency))),
-                        onTap: () {
-                          context.read<TaskListCubit>().markDone(task.id);
-                        }
+                      ),
                       ),
                     ),
-                  );
+                    );
                 },
               );
             },
@@ -91,4 +99,61 @@ String _formatFrequency(Duration? frequency) {
     return ' (dagelijks)';
   }
   return ' (elke $days dagen)';
+}
+
+enum TaskAction { select, edit, delete }
+
+Future<void> _showMenu(
+    BuildContext context,
+    Offset position,
+    Task task,
+    ) async {
+  final selected = await showMenu<TaskAction>(
+    context: context,
+    position: RelativeRect.fromLTRB(
+      position.dx,
+      position.dy,
+      position.dx,
+      position.dy,
+    ),
+    items: [
+      PopupMenuItem(
+        value: TaskAction.select,
+        child: Text('Selecteren'),
+      ),
+      PopupMenuItem(
+        value: TaskAction.edit,
+        child: Text('Bewerken'),
+      ),
+      PopupMenuItem(
+        value: TaskAction.delete,
+        child: Text('Verwijderen'),
+      ),
+    ],
+  );
+
+  if (selected != null) {
+    _handleAction(context, selected, task);
+  }
+}
+
+void _handleAction(
+    BuildContext context,
+    TaskAction action,
+    Task task,
+    ) {
+  switch (action) {
+    case TaskAction.select:
+      break;
+
+    case TaskAction.edit:
+      Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => AddTaskPage(existingTask: task),
+          ));
+
+    case TaskAction.delete:
+      context.read<TaskListCubit>().deleteTask(task);
+      break;
+  }
 }

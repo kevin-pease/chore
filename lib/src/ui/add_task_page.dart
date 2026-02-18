@@ -6,7 +6,13 @@ import 'dart:ui';
 import '../data/models/task.dart'; // TODO: is this wise?
 
 class AddTaskPage extends StatefulWidget {
-  AddTaskPage({super.key});
+  final Task? existingTask;
+
+  const AddTaskPage(
+      {
+        super.key,
+        this.existingTask,
+      });
 
   @override
   State<AddTaskPage> createState() => _AddTaskPageState();
@@ -22,6 +28,18 @@ class _AddTaskPageState extends State<AddTaskPage> {
     _titleController.dispose();
     _frequencyController.dispose();
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    final task = widget.existingTask;
+    if (task != null) {
+      _titleController.text = task.title;
+      if (task.frequency != null) {
+        _frequencyController.text = task.frequency!.inDays.toString();
+      }
+    }
   }
 
   @override
@@ -48,7 +66,9 @@ class _AddTaskPageState extends State<AddTaskPage> {
               ),
             ),
             Spacer(),
-            ElevatedButton(onPressed: _handleSubmit, child: Text('Toevoegen')),
+            ElevatedButton(
+                onPressed: _handleSubmit,
+                child: Text(widget.existingTask == null ? 'Toevoegen' : 'Opslaan')),
           ],
         ),
       ),
@@ -56,28 +76,37 @@ class _AddTaskPageState extends State<AddTaskPage> {
   }
 
   void _handleSubmit() {
-    if (_formKey.currentState!.validate()) {
-      final parsed = int.tryParse(_frequencyController.text);
-      Duration? frequency;
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
 
-      if (parsed != null && parsed > 0) {
-        frequency = Duration(days: parsed);
-      } else {
-        frequency = null;
-      }
+    final parsed = int.tryParse(_frequencyController.text);
+    Duration? frequency;
 
+    if (parsed != null && parsed > 0) {
+      frequency = Duration(days: parsed);
+    } else {
+      frequency = null;
+    }
+
+    // Determine if we're in edit or create mode.
+    if (widget.existingTask == null) {
+      // New task.
       final task = Task(
         id: UniqueKey().toString(),
         title: _titleController.text,
         frequency: frequency,
       );
-
       context.read<TaskListCubit>().addTask(task);
-
-      Navigator.of(context).pop();
     } else {
-      // TODO
+      // Existing task.
+      final updatedTask = Task(
+        id: widget.existingTask!.id,
+        title: _titleController.text,
+        frequency: frequency,
+      );
+      context.read<TaskListCubit>().editTask(updatedTask);
     }
-  }
-
+    Navigator.of(context).pop();
+    }
 }
