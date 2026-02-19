@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../task_list_page.dart';
+import '../features/task_list/task_list_page.dart';
 
 class App extends StatelessWidget {
   const App({

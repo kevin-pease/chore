@@ -1,19 +1,19 @@
-import 'package:chore/src/ui/tasklist_cubit.dart';
+import 'package:chore/src/ui/features/task_list/cubit/tasklist_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import '../data/models/task.dart';
-import 'add_task_page.dart';
+import '../../../data/models/task.dart';
+import '../add_task/add_task_page.dart';
 
-class TaskListPage extends StatefulWidget {
-  const TaskListPage({super.key});
+class TaskListView extends StatefulWidget {
+  const TaskListView({super.key});
 
   @override
-  State<TaskListPage> createState() => _TaskListPageState();
+  State<TaskListView> createState() => _TaskListViewState();
 }
 
-class _TaskListPageState extends State<TaskListPage>
+class _TaskListViewState extends State<TaskListView>
     with SingleTickerProviderStateMixin {
   Task? _pendingTask;
   late AnimationController _barController;
@@ -64,6 +64,17 @@ class _TaskListPageState extends State<TaskListPage>
 
     return Scaffold(
       backgroundColor: colorScheme.surface,
+      floatingActionButton: _pendingTask != null
+          ? null
+          : FloatingActionButton.extended(
+        onPressed: () => Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => AddTaskPage()),
+        ),
+        icon: const Icon(Icons.add_rounded),
+        label: const Text('Nieuwe taak'),
+        elevation: 2,
+      ),
       body: Stack(
         children: [
           CustomScrollView(
@@ -87,7 +98,8 @@ class _TaskListPageState extends State<TaskListPage>
                           onTap: () => Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (_) => AddTaskPage(existingTask: tasks[index]),
+                              builder: (_) =>
+                                  AddTaskPage(existingTask: tasks[index]),
                             ),
                           ),
                         );
@@ -97,21 +109,6 @@ class _TaskListPageState extends State<TaskListPage>
                 },
               ),
             ],
-          ),
-
-          // FAB
-          Positioned(
-            right: 20,
-            bottom: 24,
-            child: FloatingActionButton.extended(
-              onPressed: () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => AddTaskPage()),
-              ),
-              icon: const Icon(Icons.add_rounded),
-              label: const Text('Nieuwe taak'),
-              elevation: 2,
-            ),
           ),
 
           // Confirmation bottom bar
@@ -238,7 +235,6 @@ class _TaskCard extends StatelessWidget {
             padding: const EdgeInsets.all(16),
             child: Row(
               children: [
-                // Status dot
                 Container(
                   width: 10,
                   height: 10,
@@ -255,7 +251,6 @@ class _TaskCard extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 14),
-                // Content
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -305,8 +300,7 @@ class _TaskCard extends StatelessWidget {
                           ),
                           if (timeAgo.isNotEmpty) ...[
                             Text('  ·  ',
-                                style:
-                                TextStyle(color: colorScheme.outline)),
+                                style: TextStyle(color: colorScheme.outline)),
                             Text(
                               timeAgo,
                               style: TextStyle(
@@ -357,7 +351,6 @@ class _ConfirmBar extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // Handle
               Container(
                 width: 36,
                 height: 4,

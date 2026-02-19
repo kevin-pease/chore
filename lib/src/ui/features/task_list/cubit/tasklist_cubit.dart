@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:format/format.dart';
-import '../core/services/sorting.dart';
-import '../data/models/task.dart';
+import '../../../../core/services/sorting.dart';
+import '../../../../data/models/task.dart';
 
 class TaskListCubit extends Cubit<List<Task>> {
   TaskListCubit() : super(const []);

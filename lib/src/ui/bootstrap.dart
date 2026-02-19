@@ -1,4 +1,4 @@
-import 'package:chore/src/ui/tasklist_cubit.dart';
+import 'package:chore/src/ui/features/task_list/cubit/tasklist_cubit.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'app/app.dart';

@@ -1,9 +1,11 @@
-import 'package:chore/src/ui/tasklist_cubit.dart';
+import 'package:chore/src/ui/features/task_list/cubit/tasklist_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../data/models/task.dart';
+import '../../../data/models/task.dart';
 import 'dart:math';
+
+// NOTE: stateful widget without Cubit because form does not need state?
 
 class AddTaskPage extends StatefulWidget {
   final Task? existingTask;
