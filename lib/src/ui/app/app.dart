@@ -15,9 +15,20 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: globalBlocProviders,
-      child: const MaterialApp(
-        home: const TaskListPage(),
-      ),
+        child: MaterialApp(
+          theme: ThemeData(
+            useMaterial3: true,
+            colorSchemeSeed: Colors.orangeAccent,
+            brightness: Brightness.light,
+            textTheme: const TextTheme(
+              titleLarge: TextStyle(fontSize: 30, fontWeight: FontWeight.w600),
+              bodyLarge: TextStyle(fontSize: 6),
+              bodyMedium: TextStyle(fontSize: 4),
+              labelMedium: TextStyle(fontSize: 23),
+            ),
+          ),
+          home: const TaskListPage(),
+        )
     );
   }
 }
