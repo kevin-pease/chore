@@ -6,17 +6,16 @@ import '../../../data/models/task.dart';
 import 'dart:math';
 
 // NOTE: stateful widget without Cubit because form does not need state?
-
-class AddTaskPage extends StatefulWidget {
+class AddEditTaskView extends StatefulWidget {
   final Task? existingTask;
 
-  const AddTaskPage({super.key, this.existingTask});
+  const AddEditTaskView({super.key, this.existingTask});
 
   @override
-  State<AddTaskPage> createState() => _AddTaskPageState();
+  State<AddEditTaskView> createState() => _AddEditTaskViewState();
 }
 
-class _AddTaskPageState extends State<AddTaskPage> {
+class _AddEditTaskViewState extends State<AddEditTaskView> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _frequencyController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
@@ -28,12 +27,16 @@ class _AddTaskPageState extends State<AddTaskPage> {
   void initState() {
     super.initState();
     final task = widget.existingTask;
+
+    // TODO: inconsistent var use
+    // Populate form input elements if editing a task.
     if (task != null) {
       _titleController.text = task.title;
       if (task.frequency != null) {
         _frequencyController.text = task.frequency!.inDays.toString();
       }
     }
+
     if (!_isEditing) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _titleFocus.requestFocus();
@@ -59,19 +62,21 @@ class _AddTaskPageState extends State<AddTaskPage> {
     final frequency =
     (parsed != null && parsed > 0) ? Duration(days: parsed) : null;
 
-    if (!_isEditing) {
+    if (_isEditing) {
+      context.read<TaskListCubit>().editTask(Task(
+        id: widget.existingTask!.id,
+        title: _titleController.text.trim(),
+        frequency: frequency,
+        lastDoneAt: widget.existingTask!.lastDoneAt,
+      ));
+    } else {
       context.read<TaskListCubit>().addTask(Task(
         id: UniqueKey().toString(),
         title: _titleController.text.trim(),
         frequency: frequency,
       ));
-    } else {
-      context.read<TaskListCubit>().editTask(Task(
-        id: widget.existingTask!.id,
-        title: _titleController.text.trim(),
-        frequency: frequency,
-      ));
     }
+
     Navigator.of(context).pop();
   }
 

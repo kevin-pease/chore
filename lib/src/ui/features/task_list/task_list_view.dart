@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import '../../../data/models/task.dart';
-import '../add_task/add_task_page.dart';
+import '../add_task/add_edit_task_page.dart';
 
 class TaskListView extends StatefulWidget {
   const TaskListView({super.key});
@@ -69,7 +69,7 @@ class _TaskListViewState extends State<TaskListView>
           : FloatingActionButton.extended(
         onPressed: () => Navigator.push(
           context,
-          MaterialPageRoute(builder: (_) => AddTaskPage()),
+          MaterialPageRoute(builder: (_) => AddEditTaskPage()),
         ),
         icon: const Icon(Icons.add_rounded),
         label: const Text('Nieuwe taak'),
@@ -99,7 +99,7 @@ class _TaskListViewState extends State<TaskListView>
                             context,
                             MaterialPageRoute(
                               builder: (_) =>
-                                  AddTaskPage(existingTask: tasks[index]),
+                                  AddEditTaskPage(existingTask: tasks[index]),
                             ),
                           ),
                         );
