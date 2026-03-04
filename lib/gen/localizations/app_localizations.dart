@@ -99,6 +99,54 @@ abstract class AppLocalizations {
   /// In nl, this message translates to:
   /// **'Nieuwe Taak'**
   String get new_task;
+
+  /// No description provided for @my_tasks.
+  ///
+  /// In nl, this message translates to:
+  /// **'Mijn Taken'**
+  String get my_tasks;
+
+  /// No description provided for @settings.
+  ///
+  /// In nl, this message translates to:
+  /// **'Instellingen'**
+  String get settings;
+
+  /// No description provided for @no_tasks.
+  ///
+  /// In nl, this message translates to:
+  /// **'Geen taken'**
+  String get no_tasks;
+
+  /// No description provided for @tap_to_add.
+  ///
+  /// In nl, this message translates to:
+  /// **'Tik op + om een taak toe te voegen'**
+  String get tap_to_add;
+
+  /// No description provided for @never_done.
+  ///
+  /// In nl, this message translates to:
+  /// **'Nog nooit gedaan'**
+  String get never_done;
+
+  /// No description provided for @mark_as_done.
+  ///
+  /// In nl, this message translates to:
+  /// **'Markeren als gedaan?'**
+  String get mark_as_done;
+
+  /// No description provided for @cancel.
+  ///
+  /// In nl, this message translates to:
+  /// **'Annuleren'**
+  String get cancel;
+
+  /// No description provided for @confirm.
+  ///
+  /// In nl, this message translates to:
+  /// **'Bevestigen'**
+  String get confirm;
 }
 
 class _AppLocalizationsDelegate

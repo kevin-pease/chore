@@ -138,10 +138,12 @@ class _TaskListViewState extends State<TaskListView>
 
   Widget _buildAppBar(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final l10n = AppLocalizations.of(context);
+
     return SliverAppBar.large(
       backgroundColor: colorScheme.surface,
       surfaceTintColor: Colors.transparent,
-      title: const Text('Mijn taken'),
+      title: Text(l10n.my_tasks),
       titleTextStyle: TextStyle(
         fontSize: 32,
         fontWeight: FontWeight.w800,
@@ -151,7 +153,7 @@ class _TaskListViewState extends State<TaskListView>
       actions: [
         IconButton(
           icon: const Icon(Icons.tune_rounded),
-          tooltip: 'Instellingen',
+          tooltip: l10n.settings,
           onPressed: () {},
         ),
         const SizedBox(width: 8),
@@ -160,6 +162,8 @@ class _TaskListViewState extends State<TaskListView>
   }
 
   Widget _buildEmptyState(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+
     return Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -169,7 +173,7 @@ class _TaskListViewState extends State<TaskListView>
               color: Theme.of(context).colorScheme.outline.withOpacity(0.4)),
           const SizedBox(height: 16),
           Text(
-            'Geen taken',
+            l10n.no_tasks,
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w600,
@@ -178,7 +182,7 @@ class _TaskListViewState extends State<TaskListView>
           ),
           const SizedBox(height: 4),
           Text(
-            'Tik op + om een taak toe te voegen',
+            l10n.tap_to_add,
             style: TextStyle(
               color: Theme.of(context).colorScheme.outline.withOpacity(0.7),
             ),
@@ -204,12 +208,14 @@ class _TaskCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+
     final colorScheme = Theme.of(context).colorScheme;
     final statusColor = _colorForTask(task);
     final formatter = DateFormat('dd MMM yyyy');
     final lastDone = task.lastDoneAt != null
         ? formatter.format(task.lastDoneAt!.toLocal())
-        : 'Nog nooit gedaan';
+        : l10n.never_done;
     final timeAgo = _getTimeUnitsAgo(task.lastDoneAt);
 
     return AnimatedContainer(
@@ -343,6 +349,8 @@ class _ConfirmBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final l10n = AppLocalizations.of(context);
+
     return Material(
       elevation: 0,
       color: colorScheme.surfaceContainerHighest,
@@ -379,7 +387,7 @@ class _ConfirmBar extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Markeren als gedaan?',
+                          l10n.mark_as_done,
                           style: TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.w700,
@@ -412,7 +420,7 @@ class _ConfirmBar extends StatelessWidget {
                           side: BorderSide(
                               color: colorScheme.outline.withOpacity(0.3)),
                         ),
-                        child: const Text('Annuleren',
+                        child: Text(l10n.cancel,
                             style: TextStyle(fontWeight: FontWeight.w600)),
                       ),
                     ),
@@ -428,7 +436,7 @@ class _ConfirmBar extends StatelessWidget {
                             borderRadius: BorderRadius.circular(14),
                           ),
                         ),
-                        child: const Text('Bevestigen',
+                        child: Text(l10n.confirm,
                             style: TextStyle(fontWeight: FontWeight.w600)),
                       ),
                     ),

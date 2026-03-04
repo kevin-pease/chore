@@ -1,4 +1,12 @@
 {
   "@@locale": "nl",
-  "new_task": "Nieuwe Taak"
+  "new_task": "Nieuwe Taak",
+  "my_tasks": "Mijn Taken",
+  "settings": "Instellingen",
+  "no_tasks": "Geen taken",
+  "tap_to_add": "Tik op + om een taak toe te voegen",
+  "never_done": "Nog nooit gedaan",
+  "mark_as_done": "Markeren als gedaan?",
+  "cancel": "Annuleren",
+  "confirm": "Bevestigen"
 }
