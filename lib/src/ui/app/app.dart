@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
+import '../../../gen/localizations/app_localizations.dart';
 import '../features/task_list/task_list_page.dart';
 
 class App extends StatelessWidget {
@@ -16,6 +18,13 @@ class App extends StatelessWidget {
     return MultiBlocProvider(
       providers: globalBlocProviders,
         child: MaterialApp(
+          localizationsDelegates: const [
+            AppLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: AppLocalizations.supportedLocales,
           theme: ThemeData(
             useMaterial3: true,
             colorSchemeSeed: Colors.orangeAccent,

@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import '../../../data/models/task.dart';
 import '../add_task/add_edit_task_page.dart';
+import '../../../../gen/localizations/app_localizations.dart';
 
 class TaskListView extends StatefulWidget {
   const TaskListView({super.key});
@@ -61,6 +62,7 @@ class _TaskListViewState extends State<TaskListView>
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final l10n = AppLocalizations.of(context);
 
     return Scaffold(
       backgroundColor: colorScheme.surface,
@@ -72,7 +74,7 @@ class _TaskListViewState extends State<TaskListView>
           MaterialPageRoute(builder: (_) => AddEditTaskPage()),
         ),
         icon: const Icon(Icons.add_rounded),
-        label: const Text('Nieuwe taak'),
+        label: Text(l10n.new_task),
         elevation: 2,
       ),
       body: Stack(
