@@ -457,6 +457,7 @@ Color _colorForTask(Task task) {
   final int freq = task.frequency!.inDays;
   if (hours < freq * 0.8) return Colors.green;
   if (hours < freq) return Colors.orange;
+
   return Colors.red;
 }
 

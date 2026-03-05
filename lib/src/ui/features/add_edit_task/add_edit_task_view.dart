@@ -107,9 +107,22 @@ class _AddEditTaskViewState extends State<AddEditTaskView> {
       ),
     );
     if (confirmed == true && mounted) {
+      _showToast(context);
       context.read<TaskListCubit>().deleteTask(widget.existingTask!);
       Navigator.of(context).pop();
     }
+  }
+
+  void _showToast(BuildContext context) {
+    final scaffold = ScaffoldMessenger.of(context);
+    scaffold.showSnackBar(
+      SnackBar(
+        content: const Text('Task deleted',
+          textAlign: TextAlign.center,
+          style: TextStyle(fontSize: 16)
+          ),
+      ),
+    );
   }
 
   @override
