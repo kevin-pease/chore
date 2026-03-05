@@ -5,11 +5,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../gen/localizations/app_localizations.dart';
 import '../../../data/models/task.dart';
 import 'dart:math';
+import 'package:uuid/uuid.dart';
+
 
 // NOTE: stateful widget without Cubit because form does not need state?
 class AddEditTaskView extends StatefulWidget {
   final Task? existingTask;
-
   const AddEditTaskView({super.key, this.existingTask});
 
   @override
@@ -72,7 +73,7 @@ class _AddEditTaskViewState extends State<AddEditTaskView> {
       ));
     } else {
       context.read<TaskListCubit>().addTask(Task(
-        id: UniqueKey().toString(),
+        id: Uuid().v4(),
         title: _titleController.text.trim(),
         frequency: frequency,
       ));
@@ -114,7 +115,6 @@ class _AddEditTaskViewState extends State<AddEditTaskView> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-
     final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(

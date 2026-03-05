@@ -32,14 +32,14 @@ class TaskListCubit extends Cubit<List<Task>> {
   }
 
   void addTask(Task task) {
+    print("ID:");
+    print(task.id);
     emit([...state, task]);
   }
 
   void editTask(Task updatedTask) {
-    print(updatedTask.title);
     final updated = state.map((task) {
       if (task.id == updatedTask.id) {
-        print(format("{} == {}", task.id, updatedTask.id));
         return Task(
           id: updatedTask.id,
           title: updatedTask.title,
