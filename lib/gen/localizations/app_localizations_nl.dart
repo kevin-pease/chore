@@ -9,7 +9,7 @@ class AppLocalizationsNl extends AppLocalizations {
   AppLocalizationsNl([String locale = 'nl']) : super(locale);
 
   @override
-  String get new_task => 'Nieuwe Taak';
+  String get new_task => 'Nieuwe taak';
 
   @override
   String get my_tasks => 'Mijn Taken';
@@ -34,4 +34,34 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get confirm => 'Bevestigen';
+
+  @override
+  String get add_task => 'Taak toevoegen';
+
+  @override
+  String get delete => 'Verwijderen';
+
+  @override
+  String get edit_task => 'Taak bewerken';
+
+  @override
+  String get delete_task_prompt => 'Taak verwijderen?';
+
+  @override
+  String get will_be_deleted => 'wordt permanent verwijderd.';
+
+  @override
+  String get name => 'Naam';
+
+  @override
+  String get give_name => 'Geef de taak een naam';
+
+  @override
+  String get interval => 'Herhaalinterval';
+
+  @override
+  String get number_of_days => 'Aantal dagen (optioneel)';
+
+  @override
+  String get save_changes => 'Wijzigingen opslaan';
 }

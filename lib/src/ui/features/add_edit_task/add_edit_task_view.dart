@@ -2,6 +2,7 @@ import 'package:chore/src/ui/features/task_list/cubit/tasklist_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../gen/localizations/app_localizations.dart';
 import '../../../data/models/task.dart';
 import 'dart:math';
 
@@ -81,23 +82,25 @@ class _AddEditTaskViewState extends State<AddEditTaskView> {
   }
 
   void _handleDelete() async {
+    final l10n = AppLocalizations.of(context);
+
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: const Text('Taak verwijderen?'),
+        title: Text(l10n.delete_task_prompt),
         content: Text(
-            '"${widget.existingTask!.title}" wordt permanent verwijderd.'),
+            '"${widget.existingTask!.title}" "${l10n.will_be_deleted}"'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
-            child: const Text('Annuleren'),
+            child: Text(l10n.cancel),
           ),
           FilledButton(
             style: FilledButton.styleFrom(
                 backgroundColor: Theme.of(context).colorScheme.error),
             onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('Verwijderen'),
+            child: Text(l10n.delete),
           ),
         ],
       ),
@@ -110,6 +113,8 @@ class _AddEditTaskViewState extends State<AddEditTaskView> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+
     final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
@@ -122,7 +127,7 @@ class _AddEditTaskViewState extends State<AddEditTaskView> {
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
-          _isEditing ? 'Taak bewerken' : 'Nieuwe taak',
+          _isEditing ? l10n.edit_task : l10n.new_task,
           style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 18),
         ),
         centerTitle: true,
@@ -131,7 +136,7 @@ class _AddEditTaskViewState extends State<AddEditTaskView> {
             IconButton(
               icon: Icon(Icons.delete_outline_rounded,
                   color: colorScheme.error),
-              tooltip: 'Verwijderen',
+              tooltip: l10n.delete,
               onPressed: _handleDelete,
             ),
           const SizedBox(width: 4),
@@ -139,93 +144,127 @@ class _AddEditTaskViewState extends State<AddEditTaskView> {
       ),
       body: Form(
         key: _formKey,
-        child: ListView(
-          padding: const EdgeInsets.all(20),
+        child: Column(
           children: [
-            const SizedBox(height: 8),
-
-            _SectionLabel(label: 'Naam'),
-            const SizedBox(height: 8),
-            TextFormField(
-              controller: _titleController,
-              focusNode: _titleFocus,
-              textCapitalization: TextCapitalization.sentences,
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-                color: colorScheme.onSurface,
-              ),
-              decoration: _inputDecoration(
-                context,
-                hint: _getRandomSuggestion(),
-                prefixIcon: Icons.edit_outlined,
-              ),
-              validator: (value) {
-                if (value == null || value.trim().isEmpty) {
-                  return 'Geef de taak een naam';
-                }
-                return null;
-              },
-            ),
-
-            const SizedBox(height: 24),
-
-            _SectionLabel(label: 'Herhaalinterval'),
-            const SizedBox(height: 8),
-            TextFormField(
-              controller: _frequencyController,
-              keyboardType: TextInputType.number,
-              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-                color: colorScheme.onSurface,
-              ),
-              decoration: _inputDecoration(
-                context,
-                hint: 'Aantal dagen (optioneel)',
-                prefixIcon: Icons.repeat_rounded,
-                suffix: _frequencyController.text.isNotEmpty
-                    ? _frequencyLabel(_frequencyController.text)
-                    : null,
-              ),
-              onChanged: (_) => setState(() {}),
-            ),
-
-            // Frequency quick picks
-            const SizedBox(height: 12),
-            _FrequencyChips(
-              onSelect: (days) {
-                setState(() {
-                  _frequencyController.text = days.toString();
-                });
-              },
-              selected: int.tryParse(_frequencyController.text),
-            ),
-
-            const SizedBox(height: 40),
-
-            SizedBox(
-              height: 54,
-              child: FilledButton(
-                onPressed: _handleSubmit,
-                style: FilledButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(14),
+            Expanded(
+              child: ListView(
+                padding: const EdgeInsets.all(20),
+                children: [
+                  const SizedBox(height: 8),
+                  _SectionLabel(label: l10n.name),
+                  const SizedBox(height: 8),
+                  TextFormField(
+                    controller: _titleController,
+                    focusNode: _titleFocus,
+                    textCapitalization: TextCapitalization.sentences,
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: colorScheme.onSurface,
+                    ),
+                    decoration: _inputDecoration(
+                      context,
+                      hint: _getRandomSuggestion(),
+                      prefixIcon: Icons.edit_outlined,
+                    ),
+                    validator: (value) {
+                      if (value == null || value.trim().isEmpty) {
+                        return l10n.give_name;
+                      }
+                      return null;
+                    },
                   ),
-                ),
-                child: Text(
-                  _isEditing ? 'Wijzigingen opslaan' : 'Taak toevoegen',
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700,
+
+                  const SizedBox(height: 24),
+
+                  _SectionLabel(label: l10n.interval),
+                  const SizedBox(height: 8),
+                  TextFormField(
+                    controller: _frequencyController,
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: colorScheme.onSurface,
+                    ),
+                    decoration: _inputDecoration(
+                      context,
+                      hint: l10n.number_of_days,
+                      prefixIcon: Icons.repeat_rounded,
+                      suffix: _frequencyController.text.isNotEmpty
+                          ? _frequencyLabel(_frequencyController.text)
+                          : null,
+                    ),
+                    onChanged: (_) => setState(() {}),
                   ),
-                ),
+
+                  // Frequency quick picks
+                  const SizedBox(height: 12),
+                  _FrequencyChips(
+                    onSelect: (days) {
+                      setState(() {
+                        _frequencyController.text = days.toString();
+                      });
+                    },
+                    selected: int.tryParse(_frequencyController.text),
+                  ),
+                ]
               ),
+            ),
+
+            Padding(
+              padding: EdgeInsetsGeometry.all(16),
+              child: Row(
+                children: [
+                  Expanded(
+                      child: SizedBox(
+                        height: 54,
+                        child: OutlinedButton(
+                          onPressed: () => Navigator.pop(context),
+                          style: FilledButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(14),
+                            ),
+                          ),
+                          child: Text(l10n.cancel,
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ),
+                      ),
+                  ),
+
+                  const SizedBox(width: 12),
+
+                  Expanded(
+                    child: SizedBox(
+                      height: 54,
+                      child: FilledButton(
+                        onPressed: _handleSubmit,
+                        style: FilledButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(14),
+                          ),
+                        ),
+                        child: Text(
+                          _isEditing ? l10n.save_changes : l10n.add_task,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ]
+              )
             ),
           ],
         ),
-      ),
+      )
     );
   }
 

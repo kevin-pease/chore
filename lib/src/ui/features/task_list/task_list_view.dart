@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import '../../../data/models/task.dart';
-import '../add_task/add_edit_task_page.dart';
+import '../add_edit_task/add_edit_task_page.dart';
 import '../../../../gen/localizations/app_localizations.dart';
 
 class TaskListView extends StatefulWidget {

@@ -97,7 +97,7 @@ abstract class AppLocalizations {
   /// No description provided for @new_task.
   ///
   /// In nl, this message translates to:
-  /// **'Nieuwe Taak'**
+  /// **'Nieuwe taak'**
   String get new_task;
 
   /// No description provided for @my_tasks.
@@ -147,6 +147,66 @@ abstract class AppLocalizations {
   /// In nl, this message translates to:
   /// **'Bevestigen'**
   String get confirm;
+
+  /// No description provided for @add_task.
+  ///
+  /// In nl, this message translates to:
+  /// **'Taak toevoegen'**
+  String get add_task;
+
+  /// No description provided for @delete.
+  ///
+  /// In nl, this message translates to:
+  /// **'Verwijderen'**
+  String get delete;
+
+  /// No description provided for @edit_task.
+  ///
+  /// In nl, this message translates to:
+  /// **'Taak bewerken'**
+  String get edit_task;
+
+  /// No description provided for @delete_task_prompt.
+  ///
+  /// In nl, this message translates to:
+  /// **'Taak verwijderen?'**
+  String get delete_task_prompt;
+
+  /// No description provided for @will_be_deleted.
+  ///
+  /// In nl, this message translates to:
+  /// **'wordt permanent verwijderd.'**
+  String get will_be_deleted;
+
+  /// No description provided for @name.
+  ///
+  /// In nl, this message translates to:
+  /// **'Naam'**
+  String get name;
+
+  /// No description provided for @give_name.
+  ///
+  /// In nl, this message translates to:
+  /// **'Geef de taak een naam'**
+  String get give_name;
+
+  /// No description provided for @interval.
+  ///
+  /// In nl, this message translates to:
+  /// **'Herhaalinterval'**
+  String get interval;
+
+  /// No description provided for @number_of_days.
+  ///
+  /// In nl, this message translates to:
+  /// **'Aantal dagen (optioneel)'**
+  String get number_of_days;
+
+  /// No description provided for @save_changes.
+  ///
+  /// In nl, this message translates to:
+  /// **'Wijzigingen opslaan'**
+  String get save_changes;
 }
 
 class _AppLocalizationsDelegate

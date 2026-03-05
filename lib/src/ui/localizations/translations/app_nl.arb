@@ -1,6 +1,6 @@
 {
   "@@locale": "nl",
-  "new_task": "Nieuwe Taak",
+  "new_task": "Nieuwe taak",
   "my_tasks": "Mijn Taken",
   "settings": "Instellingen",
   "no_tasks": "Geen taken",
@@ -8,5 +8,15 @@
   "never_done": "Nog nooit gedaan",
   "mark_as_done": "Markeren als gedaan?",
   "cancel": "Annuleren",
-  "confirm": "Bevestigen"
+  "confirm": "Bevestigen",
+  "add_task": "Taak toevoegen",
+  "delete": "Verwijderen",
+  "edit_task": "Taak bewerken",
+  "delete_task_prompt": "Taak verwijderen?",
+  "will_be_deleted": "wordt permanent verwijderd.",
+  "name": "Naam",
+  "give_name": "Geef de taak een naam",
+  "interval": "Herhaalinterval",
+  "number_of_days": "Aantal dagen (optioneel)",
+  "save_changes": "Wijzigingen opslaan"
 }
