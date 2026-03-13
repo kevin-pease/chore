@@ -9,5 +9,5 @@ import '../../core.dart';
 Future<void> bootstrap() async {
   final IocContainer ioc = IocContainer.container;
 
-  ioc.currentScope;
+  ioc.currentScope; // TODO
 }

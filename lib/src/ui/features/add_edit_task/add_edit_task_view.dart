@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../gen/localizations/app_localizations.dart';
-import '../../../data/models/task.dart';
+import '../../../core/entities/task.dart';
 import 'dart:math';
 import 'package:uuid/uuid.dart';
 

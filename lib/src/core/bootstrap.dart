@@ -16,6 +16,4 @@ import 'package:flutter_ioc/flutter_ioc.dart';
 /// should be registered as a singleton.
 Future<void> bootstrap() async {
   final IocContainer ioc = IocContainer.container;
-  print("very nice");
-
 }
