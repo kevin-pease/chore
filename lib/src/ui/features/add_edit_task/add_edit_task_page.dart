@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../data/models/task.dart';
+import '../../../core/entities/task.dart';
 import 'add_edit_task_view.dart';
 
 class AddEditTaskPage extends StatelessWidget {
