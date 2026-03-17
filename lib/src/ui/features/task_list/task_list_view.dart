@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import '../../../core/entities/task.dart';
 import '../add_edit_task/add_edit_task_page.dart';
 import '../../../../gen/localizations/app_localizations.dart';
+import 'cubit/tasklist_state.dart';
 
 class TaskListView extends StatefulWidget {
   const TaskListView({super.key});
@@ -82,26 +83,26 @@ class _TaskListViewState extends State<TaskListView>
           CustomScrollView(
             slivers: [
               _buildAppBar(context),
-              BlocBuilder<TaskListCubit, List<Task>>(
-                builder: (context, tasks) {
-                  if (tasks.isEmpty) {
+              BlocBuilder<TaskListCubit, TaskListState>(
+                builder: (context, state) {
+                  if (state.tasks.isEmpty) {
                     return SliverFillRemaining(child: _buildEmptyState(context));
                   }
                   return SliverPadding(
                     padding: const EdgeInsets.fromLTRB(16, 8, 16, 120),
                     sliver: SliverList.separated(
-                      itemCount: tasks.length,
+                      itemCount: state.tasks.length,
                       separatorBuilder: (_, __) => const SizedBox(height: 10),
                       itemBuilder: (context, index) {
                         return _TaskCard(
-                          task: tasks[index],
-                          isPending: _pendingTask?.id == tasks[index].id,
-                          onLongPress: () => _onLongPress(tasks[index]),
+                          task: state.tasks[index],
+                          isPending: _pendingTask?.id == state.tasks[index].id,
+                          onLongPress: () => _onLongPress(state.tasks[index]),
                           onTap: () => Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (_) =>
-                                  AddEditTaskPage(existingTask: tasks[index]),
+                                  AddEditTaskPage(existingTask: state.tasks[index]),
                             ),
                           ),
                         );

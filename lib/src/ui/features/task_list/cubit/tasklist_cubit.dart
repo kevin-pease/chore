@@ -1,21 +1,35 @@
+import 'package:chore/src/ui/features/task_list/cubit/tasklist_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:format/format.dart';
 import '../../../../core/services/sorting.dart';
 import '../../../../core/entities/task.dart';
 
-class TaskListCubit extends Cubit<List<Task>> {
-  TaskListCubit() : super(const []);
+class TaskListCubit extends Cubit<TaskListState> {
+  TaskListCubit() : super(const TaskListState());
 
-  void loadInitialTasks([List<Task>? tasks]) {
-    emit(tasks ?? [
-      Task(id: '1', title: 'Afwassen', frequency: Duration(days: 1)),
-      Task(id: '2', title: 'Stofzuigen', frequency: Duration(days: 7)),
-      Task(id: '3', title: '60-graden was'),
-    ]);
+  void loadInitialTasks([List<Task>? tasks]) async {
+    emit(state.copyWith(isLoading: true));
+
+    try {
+      final loaded = tasks ?? [
+        Task(id: '1', title: 'Afwassen', frequency: Duration(days: 1)),
+        Task(id: '2', title: 'Stofzuigen', frequency: Duration(days: 7)),
+        Task(id: '3', title: '60-graden was'),
+      ];
+
+      emit(state.copyWith(
+        tasks: loaded,
+        isLoading: false,
+      ));
+    } catch (e) {
+      emit(state.copyWith(
+        isLoading: false,
+        error: e.toString(),
+      ));
+    }
   }
 
   void markDone(String id) {
-    final updated = state.map((task) {
+    final updated = state.tasks.map((task) {
       if (task.id == id) {
         return Task(
           id: task.id,
@@ -28,17 +42,17 @@ class TaskListCubit extends Cubit<List<Task>> {
     }).toList();
 
     updated.sort(sortTasksByRecency);
-    emit(updated);
+    emit(state.copyWith(tasks: updated));
   }
 
   void addTask(Task task) {
-    print("ID:");
-    print(task.id);
-    emit([...state, task]);
+    final updatedTask = [...state.tasks, task];
+    emit(state.copyWith(tasks: updatedTask));
   }
 
+
   void editTask(Task updatedTask) {
-    final updated = state.map((task) {
+    final updated = state.tasks.map((task) {
       if (task.id == updatedTask.id) {
         return Task(
           id: updatedTask.id,
@@ -49,12 +63,12 @@ class TaskListCubit extends Cubit<List<Task>> {
       }
       return task;
     }).toList();
-    emit(updated);
+
+    emit(state.copyWith(tasks: updated));
   }
 
   void deleteTask(Task task) {
-    final updatedList = List<Task>.from(state)
-      ..remove(task);
-    emit(updatedList);
+    final updated = List<Task>.from(state.tasks)..remove(task);
+    emit(state.copyWith(tasks: updated));
   }
 }
