@@ -6,13 +6,12 @@ import 'task_list_view.dart';
 
 class TaskListPage extends StatelessWidget {
   const TaskListPage({super.key, required this.repository});
-
   final TaskRepository repository;
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => TaskListCubit()..loadInitialTasks(),
+      create: (_) => TaskListCubit(repository)..loadInitialTasks(),
       child: const TaskListView(),
     );
   }

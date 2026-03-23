@@ -11,5 +11,5 @@ abstract interface class TaskRepository {
   Future<void> update(Task task);
 
   // Deletes a task with an particular ID from the list.
-  Future<void> delete(String id);
+  Future<void> delete(Task task);
 }
