@@ -6,6 +6,9 @@ import 'package:intl/intl.dart';
 import '../../../core/entities/task.dart';
 import '../add_edit_task/add_edit_task_page.dart';
 import '../../../../gen/localizations/app_localizations.dart';
+import 'cubit/task_cubit.dart';
+import 'cubit/task_state.dart';
+import 'cubit/tasklist_state.dart';
 
 class TaskListView extends StatefulWidget {
   const TaskListView({super.key});
@@ -71,7 +74,9 @@ class _TaskListViewState extends State<TaskListView>
           : FloatingActionButton.extended(
         onPressed: () => Navigator.push(
           context,
-          MaterialPageRoute(builder: (_) => AddEditTaskPage()),
+          MaterialPageRoute(builder: (_) => AddEditTaskPage(
+            onSave: (task) => context.read<TaskListCubit>().addTask(task),
+          )),
         ),
         icon: const Icon(Icons.add_rounded),
         label: Text(l10n.new_task),
@@ -82,26 +87,36 @@ class _TaskListViewState extends State<TaskListView>
           CustomScrollView(
             slivers: [
               _buildAppBar(context),
-              BlocBuilder<TaskListCubit, List<Task>>(
-                builder: (context, tasks) {
-                  if (tasks.isEmpty) {
+              BlocBuilder<TaskListCubit, TaskListState>(
+                builder: (context, state) {
+                  if (state.tasksCubits.isEmpty) {
                     return SliverFillRemaining(child: _buildEmptyState(context));
                   }
                   return SliverPadding(
                     padding: const EdgeInsets.fromLTRB(16, 8, 16, 120),
                     sliver: SliverList.separated(
-                      itemCount: tasks.length,
+                      itemCount: state.tasksCubits.length,
                       separatorBuilder: (_, __) => const SizedBox(height: 10),
                       itemBuilder: (context, index) {
-                        return _TaskCard(
-                          task: tasks[index],
-                          isPending: _pendingTask?.id == tasks[index].id,
-                          onLongPress: () => _onLongPress(tasks[index]),
-                          onTap: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) =>
-                                  AddEditTaskPage(existingTask: tasks[index]),
+                        final taskCubit = state.tasksCubits[index];
+                        return BlocProvider.value(
+                          key: ValueKey(taskCubit.state.task.id),
+                          value: taskCubit,
+                          child: BlocBuilder<TaskCubit, TaskState>(
+                            builder: (context, taskState) => _TaskCard(
+                              task: taskState.task,
+                              isPending: _pendingTask?.id == taskState.task.id,
+                              onLongPress: () => _onLongPress(taskState.task),
+                              onTap: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => AddEditTaskPage(
+                                      existingTask: taskState.task,
+                                    onSave: (task) => context.read<TaskListCubit>().editTask(task),
+                                    onDelete: (task) => context.read<TaskListCubit>().deleteTask(task),
+                                  ),
+                                ),
+                              ),
                             ),
                           ),
                         );
@@ -175,7 +190,7 @@ class _TaskListViewState extends State<TaskListView>
           Text(
             l10n.no_tasks,
             style: TextStyle(
-              fontSize: 18,
+              fontSize: 36,
               fontWeight: FontWeight.w600,
               color: Theme.of(context).colorScheme.outline,
             ),
@@ -184,6 +199,7 @@ class _TaskListViewState extends State<TaskListView>
           Text(
             l10n.tap_to_add,
             style: TextStyle(
+              fontSize: 18,
               color: Theme.of(context).colorScheme.outline.withOpacity(0.7),
             ),
           ),

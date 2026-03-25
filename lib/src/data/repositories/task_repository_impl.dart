@@ -17,5 +17,5 @@ class TaskRepositoryImpl implements TaskRepository {
   }
 
   @override
-  Future<void> delete(String id) async => _tasks.removeWhere((t) => t.id == id);
+  Future<void> delete(Task task) async => _tasks.removeWhere((t) => t.id == task.id);
 }

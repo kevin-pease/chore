@@ -7,11 +7,18 @@ import '../../../core/entities/task.dart';
 import 'dart:math';
 import 'package:uuid/uuid.dart';
 
-
 // NOTE: stateful widget without Cubit because form does not need state?
 class AddEditTaskView extends StatefulWidget {
   final Task? existingTask;
-  const AddEditTaskView({super.key, this.existingTask});
+  final void Function(Task) onSave;
+  final void Function(Task)? onDelete;
+
+  const AddEditTaskView({
+    super.key,
+    this.existingTask,
+    required this.onSave,
+    this.onDelete,
+  });
 
   @override
   State<AddEditTaskView> createState() => _AddEditTaskViewState();
@@ -30,7 +37,6 @@ class _AddEditTaskViewState extends State<AddEditTaskView> {
     super.initState();
     final task = widget.existingTask;
 
-    // TODO: inconsistent var use
     // Populate form input elements if editing a task.
     if (task != null) {
       _titleController.text = task.title;
@@ -64,34 +70,26 @@ class _AddEditTaskViewState extends State<AddEditTaskView> {
     final frequency =
     (parsed != null && parsed > 0) ? Duration(days: parsed) : null;
 
-    if (_isEditing) {
-      context.read<TaskListCubit>().editTask(Task(
-        id: widget.existingTask!.id,
-        title: _titleController.text.trim(),
-        frequency: frequency,
-        lastDoneAt: widget.existingTask!.lastDoneAt,
-      ));
-    } else {
-      context.read<TaskListCubit>().addTask(Task(
-        id: Uuid().v4(),
-        title: _titleController.text.trim(),
-        frequency: frequency,
-      ));
-    }
+    final task = Task(
+      id: _isEditing ? widget.existingTask!.id : Uuid().v4(),
+      title: _titleController.text.trim(),
+      frequency: frequency,
+      lastDoneAt: widget.existingTask?.lastDoneAt,
+    );
+    widget.onSave(task);
 
     Navigator.of(context).pop();
   }
 
   void _handleDelete() async {
     final l10n = AppLocalizations.of(context);
-
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         title: Text(l10n.delete_task_prompt),
         content: Text(
-            '"${widget.existingTask!.title}" "${l10n.will_be_deleted}"'),
+            '"${widget.existingTask!.title}" ${l10n.will_be_deleted}'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
@@ -108,7 +106,7 @@ class _AddEditTaskViewState extends State<AddEditTaskView> {
     );
     if (confirmed == true && mounted) {
       _showToast(context);
-      context.read<TaskListCubit>().deleteTask(widget.existingTask!);
+      widget.onDelete?.call(widget.existingTask!);
       Navigator.of(context).pop();
     }
   }
